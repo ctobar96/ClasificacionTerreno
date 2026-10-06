@@ -1,1 +1,135 @@
+# ==========================================
+
+# Entornos virtuales
+
+# ==========================================
+
+.venv/
+venv/
+env/
+ENV/
+venv_*/
+*.venv
+
+# ==========================================
+
+# Variables de entorno / secretos
+
+# ==========================================
+
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+credentials/
+
+# ==========================================
+
+# Python
+
+# ==========================================
+
+**pycache**/
+*.py[cod]
+*$py.class
+*.so
+
+# ==========================================
+
+# Jupyter Notebook
+
+# ==========================================
+
+.ipynb_checkpoints/
+
+# ==========================================
+
+# TensorFlow / Keras
+
+# ==========================================
+
+*.h5
+*.hdf5
+*.keras
+*.ckpt
+checkpoint/
+checkpoints/
+
+# Modelos entrenados
+
+models/
+saved_model/
+saved_models/
+
+# TensorBoard
+
+logs/
+tensorboard_logs/
+
+# ==========================================
+
+# Datos grandes
+
+# ==========================================
+
+data/raw/
+data/processed/
+
+# TFRecord
+
+*.tfrecord
+*.tfrecord-*
+*.record
+
+# Imágenes / datasets descargados
+
+*.zip
+*.tar
+*.tar.gz
+
+# ==========================================
+
+# Resultados generados
+
+# ==========================================
+
+outputs/
+results/
+predictions/
+figures/
+plots/
+
+# ==========================================
+
+# Archivos temporales
+
+# ==========================================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ==========================================
+
+# VS Code
+
+# ==========================================
+
+.vscode/
+
+# ==========================================
+
+# Archivos de sistema
+
+# ==========================================
+
+desktop.ini
+.DS_Store
+Thumbs.db
 
