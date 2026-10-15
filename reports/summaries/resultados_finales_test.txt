@@ -1,0 +1,5 @@
+--- RESULTADOS FINALES EN CONJUNTO DE PRUEBA (TEST) ---
+
+Modelo Transfer Learning (EfficientNetB0):
+- Loss: 0.1656
+- Accuracy: 0.9533
