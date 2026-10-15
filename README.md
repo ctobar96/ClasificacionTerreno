@@ -125,5 +125,5 @@ streamlit run app/app.py
 ---
 ## 📜 Licencia
 
-Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto se distribuye bajo la **licencia MIT**. Consulta el archivo `LICENSE` para más detalles.
 
