@@ -111,8 +111,19 @@ python src/evaluate.py --model models/fine_tuned/modelo_efnetb0_ft_final.keras
 streamlit run app/app.py
 ```
 
----
+## 👨‍💻 Autor
 
+**Cristian Tobar Morales**  
+*Data Scientist | Analytics Engineer | ML Engineer*
+
+
+### 🔗 Contacto
+
+* **LinkedIn:** [Cristian Tobar Morales](#)
+* **GitHub:** [@ctobar96](https://github.com/ctobar96)
+
+---
 ## 📜 Licencia
 
 Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+
