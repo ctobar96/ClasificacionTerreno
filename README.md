@@ -21,6 +21,8 @@ El objetivo metodológico del proyecto consistió en establecer una línea base 
 | **2. Feature Extraction** | EfficientNetB0 (Pesos congelados) | 128x128 | **95.33%** | **0.1656** |
 | **3. Fine-Tuning** | EfficientNetB0 (Ajuste Fino Capas Top) | 128x128 | **96.52%** | **0.1154** |
 
+*Nota: La métrica ponderada de F1-Score mantuvo estricta paridad con la exactitud global en todas las iteraciones, confirmando la ausencia de sesgos hacia clases mayoritarias.*
+
 ---
 
 ## 📊 Principales Hallazgos Técnicos
