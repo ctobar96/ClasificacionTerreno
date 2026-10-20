@@ -15,7 +15,7 @@ CLASES_EUROSAT_EN = sorted([
     "River", "SeaLake"
 ])
 
-# 3. Diccionario de traducción al español (Diseño limpio y profesional sin emojis)
+# 3. Diccionario de traducción al español 
 TRADUCCION_CLASES = {
     "AnnualCrop": "Cultivo Anual",
     "Forest": "Bosque",
@@ -32,7 +32,6 @@ TRADUCCION_CLASES = {
 # 4. Carga del modelo con caché (para no recargar en cada interacción)
 @st.cache_resource
 def cargar_modelo():
-    # Ajusta esta ruta a donde guardaste tu modelo final
     ruta = "models/fine_tuned/modelo_efnetb0_ft_final.keras"
     return tf.keras.models.load_model(ruta)
 
@@ -45,7 +44,7 @@ except Exception as e:
 
 # 5. Interfaz Principal
 st.title("🌍 Clasificador de Terreno - EuroSAT")
-st.write("Sube una imagen satelital para predecir su tipo de cobertura terrestre utilizando una arquitectura EfficientNetB0 ajustada.")
+st.write("Sube una imagen satelital para predecir su tipo de cobertura terrestre.")
 
 # Cargador de archivos
 archivo_subido = st.file_uploader("Elige una imagen satelital (JPG/PNG)...", type=["jpg", "png", "jpeg"])
