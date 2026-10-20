@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # 1. Configuración de la página
-st.set_page_config(page_title="Clasificador EuroSAT", page_icon="🌍", layout="centered")
+st.set_page_config(page_title="Clasificador EuroSAT", page_icon="🌍", layout="wide")
 
 # 2. Lista original en inglés (mantiene el orden exacto del entrenamiento)
 CLASES_EUROSAT_EN = sorted([
