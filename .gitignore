@@ -133,3 +133,13 @@ desktop.ini
 .DS_Store
 Thumbs.db
 
+# Entorno virtual
+.venv/
+
+# Experimentos locales de MLflow
+mlruns/
+mlflow.db
+
+# Caché de Python
+__pycache__/
+*.py[cod]

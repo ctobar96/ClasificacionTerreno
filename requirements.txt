@@ -12,4 +12,5 @@ ipykernel==6.29.5
 
 tensorflow_datasets==4.9.2
 importlib_resources==7.1.0
-streamlit
+streamlit== 1.66.0
+mlflow== 3.17.1
