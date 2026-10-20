@@ -105,3 +105,37 @@ if archivo_subido is not None and modelo_cargado:
         with col_barra:
             # Mostrar barra de progreso con el porcentaje respectivo
             st.progress(prob, text=f"{prob*100:.1f}%")
+
+
+# ==============================================================================
+# FOOTER
+# ==============================================================================
+st.markdown("<br>", unsafe_allow_html=True)
+st.divider()
+
+f_col1, f_col2, f_col3 = st.columns(3)
+
+with f_col1:
+    st.markdown("#### **Desarrollado por:**")
+    st.write("👨‍💻 **Cristian Tobar Morales**")
+    st.caption("Magíster en Data Science")
+
+with f_col2:
+    st.markdown("#### **Proyecto:**")
+    st.write("🌍 *Clasificador de Terreno - EuroSAT*")
+    st.caption("Análisis de Cobertura Terrestre")
+
+with f_col3:
+    st.markdown("#### **Información:**")
+    st.write("🚀 **Versión:** 1.1.1")
+    st.caption("Última actualización: Octubre 2026")
+
+st.markdown(
+    """
+    <div style='text-align: center; color: grey; padding-top: 20px;'>
+        <p>© 2026 <b>Cristian Tobar Morales</b>. <br> 
+         Todos los derechos reservados. | Esta aplicación es de uso estrictamente profesional y privado.</p>
+    </div>
+    """, 
+     unsafe_allow_html=True
+)
