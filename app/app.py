@@ -2,20 +2,21 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 import tensorflow as tf
+import matplotlib.pyplot as plt
 # IMPORTANTE: Importar el preprocesamiento específico de EfficientNet
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # 1. Configuración de la página
-st.set_page_config(page_title="Clasificador EuroSAT", page_icon="🌍", layout="wide")
+st.set_page_config(page_title="Clasificador EuroSAT", page_icon="🌍", layout="centered")
 
-# 2. Lista original en inglés (mantiene el orden exacto del entrenamiento)
+# 2. Lista original en inglés
 CLASES_EUROSAT_EN = sorted([
     "AnnualCrop", "Forest", "HerbaceousVegetation", "Highway", 
     "Industrial", "Pasture", "PermanentCrop", "Residential", 
     "River", "SeaLake"
 ])
 
-# 3. Diccionario de traducción al español 
+# 3. Diccionario de traducción al español
 TRADUCCION_CLASES = {
     "AnnualCrop": "Cultivo Anual",
     "Forest": "Bosque",
@@ -29,7 +30,39 @@ TRADUCCION_CLASES = {
     "SeaLake": "Mar o Lago"
 }
 
-# 4. Carga del modelo con caché (para no recargar en cada interacción)
+# 4. Función para generar el gráfico de radar (Top 5 clases)
+def generar_grafico_radar(predicciones, clases_en, traduccion):
+    # Obtener el Top 5 de clases
+    top_5_indices = np.argsort(predicciones)[-5:]
+    valores = [predicciones[i] for i in top_5_indices]
+    categorias = [traduccion[clases_en[i]] for i in top_5_indices]
+    
+    # El gráfico de radar debe ser cíclico (conectar el último punto con el primero)
+    valores = np.concatenate((valores, [valores[0]]))
+    angulos = np.linspace(0, 2 * np.pi, len(categorias), endpoint=False).tolist()
+    angulos += angulos[:1]
+    
+    # Crear la figura polar
+    fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))
+    
+    # Dibujar la línea exterior y rellenar el área
+    ax.plot(angulos, valores, color='#1f77b4', linewidth=2, linestyle='solid')
+    ax.fill(angulos, valores, color='#1f77b4', alpha=0.25)
+    
+    # Configurar las etiquetas para cada eje
+    ax.set_theta_offset(np.pi / 2)
+    ax.set_theta_direction(-1)
+    ax.set_thetagrids(np.degrees(angulos[:-1]), categorias, fontsize=9, fontweight='semibold')
+    
+    # Líneas de cuadrícula (de 0% a 100% de probabilidad)
+    ax.set_rlabel_position(0)
+    plt.yticks([0.25, 0.50, 0.75, 1.0], ["25%", "50%", "75%", "100%"], color="grey", size=8)
+    plt.ylim(0, 1.05)
+    
+    plt.tight_layout()
+    return fig
+
+# 5. Carga del modelo con caché
 @st.cache_resource
 def cargar_modelo():
     ruta = "models/fine_tuned/modelo_efnetb0_ft_final.keras"
@@ -42,9 +75,9 @@ except Exception as e:
     st.error(f"Error al cargar el modelo. Verifica la ruta: {e}")
     modelo_cargado = False
 
-# 5. Interfaz Principal
+# 6. Interfaz Principal
 st.title("🌍 Clasificador de Terreno - EuroSAT")
-st.write("Sube una imagen satelital para predecir su tipo de cobertura terrestre.")
+st.write("Sube una imagen satelital para predecir su tipo de cobertura terrestre utilizando una arquitectura EfficientNetB0 ajustada.")
 
 # Cargador de archivos
 archivo_subido = st.file_uploader("Elige una imagen satelital (JPG/PNG)...", type=["jpg", "png", "jpeg"])
@@ -52,61 +85,52 @@ archivo_subido = st.file_uploader("Elige una imagen satelital (JPG/PNG)...", typ
 if archivo_subido is not None and modelo_cargado:
     col_img, col_pred = st.columns(2)
     
-    # Abrir y procesar la imagen original
     imagen_pil = Image.open(archivo_subido).convert("RGB")
     
     with col_img:
         st.image(imagen_pil, caption="Imagen Subida", use_container_width=True)
         
     with st.spinner('Procesando características...'):
-        # 6. PREPROCESAMIENTO IDÉNTICO AL ENTRENAMIENTO
-        # a. Redimensionar al "Campo Receptivo" de EfficientNet (128x128)
+        # Preprocesamiento
         imagen_redimensionada = imagen_pil.resize((128, 128))
-        # b. Convertir a Array
         img_array = np.array(imagen_redimensionada)
-        # c. Asegurar float32
         img_array = img_array.astype('float32')
-        # d. Añadir la dimensión de lote (Batch) -> Forma final: (1, 128, 128, 3)
         img_batch = np.expand_dims(img_array, axis=0)
-        # e. Aplicar la función de preprocesamiento oficial del modelo
         img_preprocesada = preprocess_input(img_batch)
 
-        # 7. Predicción
+        # Predicción
         predicciones = modelo.predict(img_preprocesada)[0]
         indice_predicho = np.argmax(predicciones)
         
-        # Obtener nombres en inglés y español
         clase_predicha_en = CLASES_EUROSAT_EN[indice_predicho]
         clase_predicha_es = TRADUCCION_CLASES[clase_predicha_en]
         confianza_max = predicciones[indice_predicho]
 
-    # 8. Despliegue de Resultados (Panel lateral derecho)
     with col_pred:
         st.subheader("Predicción:")
         st.write(f"### **{clase_predicha_es}**")
         st.write(f"Confianza: **{confianza_max*100:.2f}%**")
 
-    # 9. Barra de probabilidades (Top 3)
+    # 7. Visualización Avanzada (Gráfico de Radar y Barras)
     st.divider()
-    st.write("#### Distribución de Probabilidades (Top 3)")
+    col_radar, col_barras = st.columns([1.1, 1])
     
-    # Obtener los 3 índices con mayores probabilidades
-    top_3_indices = np.argsort(predicciones)[-3:][::-1]
-    
-    for i in top_3_indices:
-        clase_en = CLASES_EUROSAT_EN[i]
-        clase_es = TRADUCCION_CLASES[clase_en] # Traducir al español de forma limpia
-        prob = float(predicciones[i])
+    with col_radar:
+        st.write("#### Distribución de Probabilidades")
+        # Generamos y pintamos el gráfico de radar en Streamlit
+        fig_radar = generar_grafico_radar(predicciones, CLASES_EUROSAT_EN, TRADUCCION_CLASES)
+        st.pyplot(fig_radar)
         
-        # Columnas para alinear texto de clase y la barra de progreso
-        col_texto, col_barra = st.columns([1.5, 3])
-        with col_texto:
+    with col_barras:
+        st.write("#### Top 3 Clases Más Probables")
+        top_3_indices = np.argsort(predicciones)[-3:][::-1]
+        for i in top_3_indices:
+            clase_en = CLASES_EUROSAT_EN[i]
+            clase_es = TRADUCCION_CLASES[clase_en]
+            prob = float(predicciones[i])
+            
             st.write(f"**{clase_es}**")
-        with col_barra:
-            # Mostrar barra de progreso con el porcentaje respectivo
             st.progress(prob, text=f"{prob*100:.1f}%")
-
-
 # ==============================================================================
 # FOOTER
 # ==============================================================================
