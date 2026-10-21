@@ -1,0 +1,6 @@
+.venv/
+env/
+data/
+*.tfrecord
+__pycache__/
+.ipynb_checkpoints/
