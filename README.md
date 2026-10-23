@@ -4,10 +4,12 @@
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Project Status](https://img.shields.io/badge/Status-Completed-brightgreen.svg)]()
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=flat&logo=amazon-aws&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=flat&logo=streamlit&logoColor=white)
 
-Este repositorio contiene la implementación end-to-end para la clasificación de cobertura terrestre (*Land Cover Classification*) sobre el dataset **EuroSAT**, desarrollada como parte de un proyecto de Magíster. 
-
-El trabajo abarca desde el diseño, optimización y entrenamiento de una red neuronal convolucional personalizada (Custom CNN) hasta la aplicación de técnicas avanzadas de **Transfer Learning** y **Fine-Tuning** con **EfficientNetB0**, logrando superar la barrera del **96.5% de exactitud**.
+## 📌 Descripción del Proyecto
+Este repositorio contiene el código fuente, la contenedorización y la configuración de despliegue en la nube para un modelo de clasificación de imágenes satelitales (dataset EuroSAT). Este proyecto fue desarrollado como parte integral de mi **Magíster en Data Science**, demostrando el ciclo completo de Machine Learning: desde el entrenamiento de una red neuronal profunda hasta su puesta en producción.
 
 ---
 
@@ -76,39 +78,54 @@ ClasificacionTerreno/
 
 ---
 
-## 🛠️ Tecnologías y Herramientas
+## 🏗️ Arquitectura y Tecnologías
+La solución está construida bajo un enfoque de **MLOps**, asegurando que el modelo sea replicable, escalable y monitoreable:
 
-* **Lenguaje:** Python 3.10+
-* **Deep Learning Framework:** TensorFlow 2.x / Keras
-* **Procesamiento e Infraestructura:** NumPy, Pandas, Scikit-learn, Google Colab GPU
-* **Visualización:** Matplotlib, Seaborn
-* **Despliegue & MLOps:** Streamlit, Docker, Git/GitHub
+- **Modelado Deep Learning:** Implementación de redes neuronales convolucionales (CNN) y *Transfer Learning* utilizando la arquitectura **EfficientNetB0** mediante TensorFlow y Keras.
+- **Interfaz Web:** Aplicación interactiva construida con **Streamlit** para permitir a los usuarios subir imágenes y obtener predicciones en tiempo real.
+- **Contenedorización:** Empaquetado de la aplicación y sus dependencias en una imagen de **Docker**, alojada públicamente en **GitHub Container Registry (GHCR)**.
+- **Infraestructura Cloud (AWS):** Despliegue en una instancia **Amazon EC2** (`t2.micro`, Ubuntu) gestionando grupos de seguridad para tráfico web.
+- **Monitoreo y Observabilidad:** Integración nativa del contenedor con **AWS CloudWatch** a través de roles IAM, permitiendo la trazabilidad de logs de inferencia y la configuración de alarmas de consumo de CPU.
 
----
+## 🚀 Despliegue en AWS (Producción)
+La aplicación está diseñada para ser desplegada rápidamente en cualquier servidor en la nube que tenga Docker instalado, sin necesidad de transferir el código fuente manualmente.
 
-## 🚀 Instalación y Uso
+Para ver la guía paso a paso de cómo configurar la infraestructura en AWS Amazon EC2, asignar roles de CloudWatch y ejecutar el contenedor, consulta el archivo de documentación:
+👉 **[Ver Guía de Despliegue en AWS](doc/guia_de_despliegue_aws.md)**
 
-### 1. Clonar el Repositorio
+### Comando de ejecución rápida
+Si ya cuentas con un servidor configurado, puedes levantar la aplicación con un solo comando:
 ```bash
-git clone https://github.com/tu-usuario/ClasificacionTerreno.git
+docker run -d \
+  -p 8501:8501 \
+  --name eurosat-app \
+  --log-driver=awslogs \
+  --log-opt awslogs-region=us-east-1 \
+  --log-opt awslogs-group=/aws/ec2/eurosat-app \
+  --log-opt awslogs-create-group=true \
+  --log-opt awslogs-stream=streamlit-instance \
+  ghcr.io/ctobar96/clasificador-eurosat:v1
+```
+*(Nota: Ajusta la región `us-east-1` según tu configuración en AWS).*
+
+## 💻 Uso Local
+
+Si deseas correr este proyecto en tu máquina local para desarrollo:
+
+1. Clona este repositorio:
+```bash
+git clone https://github.com/ctobar96/ClasificacionTerreno.git
 cd ClasificacionTerreno
 ```
-
-### 2. Crear Entorno Virtual e Instalar Dependencias
+2. Instala las dependencias:
 ```bash
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Ejecutar Evaluación de Modelos
-```bash
-python src/evaluate.py --model models/fine_tuned/modelo_efnetb0_ft_final.keras
-```
 
-### 4. Lanzar la Aplicación Interactiva (Streamlit)
+3. Ejecuta la aplicación de Streamlit:
 ```bash
-streamlit run app/app.py
+streamlit run app.py
 ```
 
 ## 👨‍💻 Autor
