@@ -19,9 +19,9 @@ El objetivo metodológico del proyecto consistió en establecer una línea base 
 
 | Fase / Experimento | Arquitectura | Resolución Entrada | Exactitud (Accuracy) | Pérdida (Test Loss) |
 | :--- | :--- | :---: | :---: | :---: |
-| **1. Baseline (Custom)** | CNN Profunda (32-64-128) + SpatialDropout | 64x64 | **92.54%** | **0.2232** |
-| **2. Feature Extraction** | EfficientNetB0 (Pesos congelados) | 128x128 | **95.33%** | **0.1656** |
-| **3. Fine-Tuning** | EfficientNetB0 (Ajuste Fino Capas Top) | 128x128 | **96.52%** | **0.1154** |
+| **1. Baseline (Custom)** | CNN Profunda (32-64-128) + SpatialDropout | 64x64 | **93.04%** | **0.2096** |
+| **2. Feature Extraction** | EfficientNetB0 (Pesos congelados) | 128x128 | **95.73%** | **0.1391** |
+| **3. Fine-Tuning** | EfficientNetB0 (Ajuste Fino Capas Top) | 128x128 | **95.73%** | **0.1377** |
 
 ---
 
