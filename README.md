@@ -48,6 +48,7 @@ ClasificacionTerreno/
 ├── doc/                     # Documentación técnica y manuales de infraestructura
 │   ├── Apuntes_ Despliegue de Imagen Docker en GitHub Container Registry (GHCR).md[cite: 7]
 │   └── guia_de_despliegue_aws.md[cite: 7]
+│   └── img        
 │
 ├── models/                  # Pesos guardados en formato Keras (.keras)
 │   ├── baselines/           # modelo_cnn_custom.keras (92.54%)
