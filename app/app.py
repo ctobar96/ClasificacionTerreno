@@ -6,6 +6,12 @@ import matplotlib.pyplot as plt
 # IMPORTANTE: Importar el preprocesamiento específico de EfficientNet
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
+@st.cache_resource
+def cargar_modelo():
+    return tf.keras.models.load_model("modelo_eurosat.keras")
+
+modelo = cargar_modelo()
+
 # 1. Configuración de la página
 st.set_page_config(page_title="Clasificador EuroSAT", page_icon="🌍", layout="wide") # Usamos 'wide' para aprovechar mejor el espacio con el sidebar
 
