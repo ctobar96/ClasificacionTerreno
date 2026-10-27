@@ -1,9 +1,6 @@
 # ==========================================
-
 # Entornos virtuales
-
 # ==========================================
-
 .venv/
 venv/
 env/
@@ -12,11 +9,8 @@ venv_*/
 *.venv
 
 # ==========================================
-
 # Variables de entorno / secretos
-
 # ==========================================
-
 .env
 .env.*
 !.env.example
@@ -26,75 +20,64 @@ secrets/
 credentials/
 
 # ==========================================
-
 # Python
-
 # ==========================================
-
-**pycache**/
+__pycache__/
 *.py[cod]
 *$py.class
 *.so
 
 # ==========================================
-
 # Jupyter Notebook
-
 # ==========================================
-
 .ipynb_checkpoints/
 
 # ==========================================
-
 # TensorFlow / Keras
-
 # ==========================================
-
 *.h5
 *.hdf5
-*.keras
 *.ckpt
 checkpoint/
 checkpoints/
 
-# Modelos entrenados
+# Ignorar todos los .keras genéricos, pero permitir el de producción
+*.keras
+!models/fine_tuned/modelo_efnetb0_ft_final.keras
 
-models/
+# Modelos entrenados
+# Ignorar el contenido de la carpeta models, pero crear la excepción exacta para el archivo
+models/*
+!models/fine_tuned/
+models/fine_tuned/*
+!models/fine_tuned/modelo_efnetb0_ft_final.keras
+
 saved_model/
 saved_models/
 
 # TensorBoard
-
 logs/
 tensorboard_logs/
 
 # ==========================================
-
 # Datos grandes
-
 # ==========================================
-
 data/raw/
 data/processed/
 
 # TFRecord
-
 *.tfrecord
 *.tfrecord-*
 *.record
 
 # Imágenes / datasets descargados
-
 *.zip
 *.tar
 *.tar.gz
 
 # ==========================================
-
 # Resultados generados
-
 # ==========================================
-
 outputs/
 results/
 predictions/
@@ -102,11 +85,8 @@ figures/
 plots/
 
 # ==========================================
-
 # Archivos temporales
-
 # ==========================================
-
 *.tmp
 *.temp
 *.bak
@@ -116,34 +96,19 @@ plots/
 Thumbs.db
 
 # ==========================================
-
 # VS Code
-
 # ==========================================
-
 .vscode/
 
 # ==========================================
-
 # Archivos de sistema
-
 # ==========================================
-
 desktop.ini
 .DS_Store
 Thumbs.db
-
-# Entorno virtual
-.venv/
 
 # Experimentos locales de MLflow
 mlruns/
 mlflow.db
 
-# Caché de Python
-__pycache__/
-*.py[cod]
-
-
-*.pem
 .github
