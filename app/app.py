@@ -5,7 +5,6 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 # IMPORTANTE: Importar el preprocesamiento específico de EfficientNet
 from tensorflow.keras.applications.efficientnet import preprocess_input
-import os 
 
 
 # 1. Configuración de la página
@@ -62,11 +61,7 @@ def generar_grafico_radar(predicciones, clases_en, traduccion):
 # 5. Carga del modelo con caché
 @st.cache_resource
 def cargar_modelo():
-# 1. Obtiene la ruta absoluta de la carpeta donde está este archivo (app.py)
-    directorio_actual = os.path.dirname(os.path.abspath(__file__))
-    
-    # 2. Construye la ruta exacta sin importar desde dónde se ejecute Streamlit
-    ruta = os.path.join(directorio_actual, "models", "fine_tuned", "modelo_efnetb0_ft_final.keras")
+    ruta = "models/fine_tuned/modelo_efnetb0_ft_final.keras"
     return tf.keras.models.load_model(ruta)
 
 try:
