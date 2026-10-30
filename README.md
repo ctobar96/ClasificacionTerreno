@@ -1,19 +1,21 @@
-# 🛰️ EuroSAT Land Cover Classification: Custom CNN & EfficientNetB0 Transfer Learning
+# EuroSAT Land Cover Classification: Custom CNN & EfficientNetB0 Transfer Learning
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Project Status](https://img.shields.io/badge/Status-Completed-brightgreen.svg)]()
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=flat&logo=amazon-aws&logoColor=white)
+![GCP](https://img.shields.io/badge/Google_Cloud-Cloud_Run-4285F4?style=flat&logo=google-cloud&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=flat&logo=github-actions&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-IaC-7B42BC?style=flat&logo=terraform&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=flat&logo=streamlit&logoColor=white)
 
-## 📌 Descripción del Proyecto
-Este repositorio contiene el código fuente, la contenedorización y la configuración de despliegue en la nube para un modelo de clasificación de imágenes satelitales (dataset EuroSAT). Este proyecto fue desarrollado como parte integral de mi **Magíster en Data Science**, demostrando el ciclo completo de Machine Learning: desde el entrenamiento de una red neuronal profunda hasta su puesta en producción.
+## Descripción del Proyecto
+Este repositorio contiene el código fuente, la contenerización, la automatización CI/CD y la infraestructura como código (IaC) para un modelo de clasificación de imágenes satelitales (dataset EuroSAT). Este proyecto fue desarrollado como parte integral de mi **Magíster en Data Science**, demostrando el ciclo de vida completo de Machine Learning (MLOps): desde el entrenamiento e ingeniería de características hasta su puesta en producción en **Google Cloud Run** con despliegue automatizado mediante **GitHub Actions**.
 
 ---
 
-## 📌 Resumen Ejecutivo y Resultados
+## Resumen Ejecutivo y Resultados
 
 El objetivo metodológico del proyecto consistió en establecer una línea base (*Baseline*) sólida mediante una arquitectura propia, identificar sus cuellos de botella algorítmicos en la extracción de características y superarlos progresivamente mediante transferencia de conocimiento preentrenado en ImageNet.
 
@@ -25,29 +27,39 @@ El objetivo metodológico del proyecto consistió en establecer una línea base 
 
 ---
 
-## 📊 Principales Hallazgos Técnicos
+## Principales Hallazgos Técnicos
 
 1. **Superación del Baseline:** La CNN personalizada alcanzó un rendimiento sobresaliente (~92.5%) utilizando regularización espacial (`SpatialDropout2D`), `BatchNormalization` y `GlobalAveragePooling2D`.
 2. **Resolución del Cuello de Botella Agrícola:** La CNN propia presentó ligeras dificultades para diferenciar microtexturas en clases con alta similitud espectral/visual (`HerbaceousVegetation` vs `PermanentCrop`).
 3. **Escalado de Resolución (128x128):** Para evitar la degradación espacial del mapa de características en EfficientNetB0, se adaptó el pipeline (`tf.data`) interpolando las imágenes de 64x64 a 128x128.
-4. **Impacto del Fine-Tuning:** Descongelar los bloques convolucionales superiores con un *Learning Rate* reducido (`1e-5`) redujo la función de pérdida a **0.1154**, aumentando sustancialmente la certeza de las predicciones.
+4. **Impacto del Fine-Tuning:** Descongelar los bloques convolucionales superiores con un *Learning Rate* reducido (`1e-5`) redujo la función de pérdida a **0.1377**, aumentando sustancialmente la certeza de las predicciones.
 
 ---
 
-## 📁 Estructura del Repositorio
+## Estructura del Repositorio
 
 El proyecto sigue una arquitectura estandarizada MLOps basada en *Cookiecutter Data Science*:
 
 ```text
 ClasificacionTerreno/
 │
+├── .github/
+│   └── workflows/
+│       └── deploy.yml       # Pipeline CI/CD automatizado para Cloud Run
+│
+├── terraform/               # Infraestructura como Código (IaC)
+│   ├── provider.tf          # Configuración de GCP y Backend remoto GCS
+│   ├── main.tf              # Definición de IAM, APIs y Cloud Run
+│   ├── variables.tf         # Parámetros del proyecto y región
+│   └── outputs.tf           # Salida de URLs y Service Accounts
+│
 ├── data/                    # Datos crudos y procesados (.tfrecord / imágenes)
 │   ├── raw/
 │   └── processed/
 │
-├── doc/                     # Documentación técnica y manuales de infraestructura
-│   ├── Apuntes_ Despliegue de Imagen Docker en GitHub Container Registry (GHCR).md[cite: 7]
-│   └── guia_de_despliegue_aws.md[cite: 7]
+├── doc/                     # Documentación técnica de arquitectura y despliegue
+│   ├── Apuntes_ Despliegue de Imagen Docker en GitHub Container Registry (GHCR).md
+│   └── guia_de_despliegue_aws.md
 │   └── img        
 │
 ├── models/                  # Pesos guardados en formato Keras (.keras)
@@ -72,27 +84,31 @@ ClasificacionTerreno/
 │   ├── models.py            # Definición de arquitecturas Keras
 │   └── evaluate.py          # Generación de métricas globales y matrices de confusión
 │
-├── app/                     # Interfaz web interactiva para inferencia
-│   └── app.py               # Dashboard en Streamlit
-│
-├── .gitignore
-├── Dockerfile               # Contenerización para despliegue
+├── app.py                   # Dashboard web interactivo en Streamlit
+├── Dockerfile               # Contenerización para entorno serverless
+├── .gitignore               # Filtrado de modelos pesados y secretos IAM
 ├── README.md
 └── requirements.txt         # Dependencias del proyecto
 ```
 
 ---
 
-## 🏗️ Arquitectura y Tecnologías
-La solución está construida bajo un enfoque de **MLOps**, asegurando que el modelo sea replicable, escalable y monitoreable:
+## Arquitectura y Tecnologías
+La solución está construida bajo un enfoque de MLOps & cloud-native, asegurando replicabilidad, seguridad e infraestructura automatizada:
 
-- **Modelado Deep Learning:** Implementación de redes neuronales convolucionales (CNN) y *Transfer Learning* utilizando la arquitectura **EfficientNetB0** mediante TensorFlow y Keras.
-- **Interfaz Web:** Aplicación interactiva construida con **Streamlit** para permitir a los usuarios subir imágenes y obtener predicciones en tiempo real.
-- **Contenedorización:** Empaquetado de la aplicación y sus dependencias en una imagen de **Docker**, alojada públicamente en **GitHub Container Registry (GHCR)**.
-- **Infraestructura Cloud (AWS):** Despliegue en una instancia **Amazon EC2** (`t2.micro`, Ubuntu) gestionando grupos de seguridad para tráfico web.
-- **Monitoreo y Observabilidad:** Integración nativa del contenedor con **AWS CloudWatch** a través de roles IAM, permitiendo la trazabilidad de logs de inferencia y la configuración de alarmas de consumo de CPU.
+- **Modelado Deep Learning:** Redes neuronales convolucionales (CNN) y Transfer Learning utilizando EfficientNetB0 mediante TensorFlow y Keras.
 
-## 🚀 Despliegue en AWS (Producción)
+- **Interfaz Web:** Aplicación interactiva construida con Streamlit para inferencia en tiempo real.
+
+- **Contenerización:** Empaquetado optimizado con python:`3.10-slim` y compilación serverless en la nube con Cloud Build y Artifact Registry.
+
+- **Infraestructura Cloud (GCP):** Despliegue serverless en Google Cloud Run (`us-central1`, 2GiB RAM, 1 CPU, escalado a cero y afinidad de sesión activa).
+
+- **Integración y Despliegue Continuo (CI/CD):** Pipeline automatizado con GitHub Actions usando autenticación IAM segura mediante GitHub Secrets (`GCP_SA_KEY`).
+
+- **Infraestructura como Código (IaC):** Gestión declarativa con Terraform y estado remoto centralizado con candado de concurrencia en Google Cloud Storage (GCS).
+
+## Despliegue y CI/CD (Producción)
 La aplicación está diseñada para ser desplegada rápidamente en cualquier servidor en la nube que tenga Docker instalado, sin necesidad de transferir el código fuente manualmente.
 
 Para ver la guía paso a paso de cómo configurar la infraestructura en AWS Amazon EC2, asignar roles de CloudWatch y ejecutar el contenedor, consulta el archivo de documentación:
